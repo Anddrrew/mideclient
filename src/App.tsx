@@ -1,13 +1,21 @@
-import './App.css';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { AuthContextProvider } from './contexts/AuthContext';
 import Router from './router';
+import './App.css';
 
-function App() {
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
+export default function App() {
   return (
-    <AuthContextProvider>
-      <Router />
-    </AuthContextProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthContextProvider>
+        <Router />
+      </AuthContextProvider>
+    </ThemeProvider>
   );
 }
-
-export default App;

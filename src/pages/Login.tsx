@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
@@ -5,7 +6,9 @@ export default function Login() {
   return (
     <>
       <p>LOGIN</p>
-      <button onClick={signIn}>LOGIN</button>
+      <Button variant='contained' onClick={signIn}>
+        LOGIN
+      </Button>
     </>
   );
 }

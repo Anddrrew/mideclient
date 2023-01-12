@@ -1,6 +1,8 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import Link from '@mui/material/Link';
 import { useAuth } from '../contexts/AuthContext';
 import { appPaths } from '../router/paths';
+import { Button } from '@mui/material';
 
 export default function Room() {
   const { roomId } = useParams();
@@ -10,9 +12,13 @@ export default function Room() {
     <>
       <p>ROOM {roomId}</p>
       <p>
-        <Link to={appPaths.INDEX}>Home</Link>
+        <Link component={RouterLink} underline='none' to={appPaths.INDEX}>
+          Home
+        </Link>
       </p>
-      <button onClick={signOut}>LOGOUT</button>
+      <Button variant='contained' onClick={signOut}>
+        LOGOUT
+      </Button>
     </>
   );
 }
