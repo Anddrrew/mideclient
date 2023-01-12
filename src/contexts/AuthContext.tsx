@@ -5,19 +5,19 @@ import { appPaths, guestPaths } from '../router/paths';
 const useAuthManager = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(AuthManager.isLoggedIn());
 
-  const signIn = () => {
+  const logIn = () => {
     AuthManager.login('TOKEN');
     setIsLoggedIn(true);
     window.location.hash = appPaths.INDEX;
   };
 
-  const signOut = () => {
+  const logOut = () => {
     AuthManager.logout();
     setIsLoggedIn(false);
     window.location.hash = guestPaths.LOGIN;
   };
 
-  return { isLoggedIn, signIn, signOut };
+  return { isLoggedIn, logIn, logOut };
 };
 
 type useAuthManager = ReturnType<typeof useAuthManager>;

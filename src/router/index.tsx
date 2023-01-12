@@ -3,6 +3,7 @@ import { Home, Login, Room } from '../pages';
 import { ReactNode } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { appPaths, guestPaths } from './paths';
+import Layout from '../layout';
 
 type PageComponentMap = {
   [path: string]: ReactNode;
@@ -20,12 +21,15 @@ const appPages: PageComponentMap = {
 };
 
 const createRouter = (pages: PageComponentMap) =>
-  createBrowserRouter(
-    Object.keys(pages).map((key) => ({
-      path: key,
-      element: pages[key],
-    }))
-  );
+  createBrowserRouter([
+    {
+      element: <Layout />,
+      children: Object.keys(pages).map((key) => ({
+        path: key,
+        element: pages[key],
+      })),
+    },
+  ]);
 
 const guestRouter = createRouter(guestPages);
 const appRouter = createRouter(appPages);
