@@ -1,6 +1,8 @@
 import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import AppLayout from './AppLayout';
+import AuthLayout from './AuthLayout';
 
 export default function Layout() {
   const { isLoggedIn, logIn, logOut } = useAuth();
@@ -22,7 +24,15 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
       <Box mx={3}>
-        <Outlet />
+        {isLoggedIn ? (
+          <AppLayout>
+            <Outlet />
+          </AppLayout>
+        ) : (
+          <AuthLayout>
+            <Outlet />
+          </AuthLayout>
+        )}
       </Box>
     </>
   );
