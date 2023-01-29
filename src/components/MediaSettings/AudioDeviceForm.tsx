@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 type Props = {
   devices: InputDeviceInfo[] | MediaDeviceInfo[];
+  disabled?: boolean;
   defaultDevice?: string;
   defaultVolume?: number;
   onDeviceChange?: <T>(deviceId: string) => T | void;
@@ -11,6 +12,7 @@ type Props = {
 
 export default function AudioDeviceForm({
   devices,
+  disabled,
   defaultDevice = 'default',
   defaultVolume = 30,
   onDeviceChange = () => {},
@@ -38,6 +40,7 @@ export default function AudioDeviceForm({
           onChange={handleChangeDevice}
           input={<OutlinedInput />}
           displayEmpty
+          disabled={disabled}
         >
           {devices.map((device, index) => (
             <MenuItem value={device.deviceId} key={index}>

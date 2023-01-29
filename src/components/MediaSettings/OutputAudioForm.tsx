@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
  */
 
 interface AudioElement extends HTMLVideoElement {
-  setSinkId(id: string): void;
+  setSinkId: ((id: string) => void) | undefined;
 }
 
 export default function OutputAudioForm() {
@@ -36,7 +36,7 @@ export default function OutputAudioForm() {
 
   useEffect(() => {
     setAudio((audio) => {
-      audio.setSinkId(deviceId);
+      audio.setSinkId?.(deviceId);
       return audio;
     });
   }, [deviceId]);
@@ -48,6 +48,7 @@ export default function OutputAudioForm() {
         devices={audioOutput}
         onDeviceChange={handleDeviceIdChange}
         onVolumeChange={handleVolumeChange}
+        disabled={!audio.setSinkId}
       />
       <Button onClick={handleCheck} variant='contained' disabled={isPlaying}>
         Check
