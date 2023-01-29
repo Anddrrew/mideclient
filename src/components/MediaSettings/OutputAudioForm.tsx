@@ -43,7 +43,7 @@ export default function OutputAudioForm() {
 
   return (
     <Stack>
-      <Typography variant='subtitle1'>Output Device</Typography>
+      <Typography variant='subtitle1'>Audio Output</Typography>
       <AudioDeviceForm
         devices={audioOutput}
         onDeviceChange={handleDeviceIdChange}

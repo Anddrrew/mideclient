@@ -7,7 +7,7 @@ export default function InputDeviceForm() {
 
   return (
     <Stack>
-      <Typography variant='subtitle1'>Input Device</Typography>
+      <Typography variant='subtitle1'>Audio Input</Typography>
       <AudioDeviceForm devices={audioInput} />
     </Stack>
   );
