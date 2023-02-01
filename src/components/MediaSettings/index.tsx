@@ -1,8 +1,7 @@
-import { Grid } from '@mui/material';
-import InputDeviceForm from './InputAudioForm';
-import OutputAudioForm from './OutputAudioForm';
+import { Grid, Stack } from '@mui/material';
 import VideoInputForm from './VideoInputForm';
-import { Stack } from '@mui/system';
+import AudioInputForm from './AudioInputForm';
+import AudioOutputForm from './AudioOutputForm';
 
 export default function MediaSettings() {
   return (
@@ -13,8 +12,8 @@ export default function MediaSettings() {
         </Grid>
         <Grid item sm={12} md={3}>
           <Stack spacing={2}>
-            <InputDeviceForm />
-            <OutputAudioForm />
+            <AudioInputForm />
+            <AudioOutputForm />
           </Stack>
         </Grid>
       </Grid>

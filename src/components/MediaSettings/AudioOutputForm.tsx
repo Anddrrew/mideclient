@@ -1,26 +1,18 @@
-import { Button, Stack, Typography } from '@mui/material';
-import AudioDeviceForm from './AudioDeviceForm';
+import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { useDevices } from '../../contexts/DevicesContext';
 import bleepAudio from './../../assets/audios/bleep.mp3';
 import { useEffect, useState } from 'react';
+import AudioElement from '../../types/AudioElement';
+import DeviceSelect from './DeviceSelect';
 
-/* setSinkId doesn't work for mobile devices.
- * https://caniuse.com/mdn-api_htmlmediaelement_setsinkid
- */
-
-interface AudioElement extends HTMLVideoElement {
-  setSinkId: ((id: string) => void) | undefined;
-}
-
-export default function OutputAudioForm() {
+export default function AudioOutputForm() {
   const { audioOutput } = useDevices();
-  const [volume, setVolume] = useState(100);
   const [deviceId, setDeviceId] = useState('default');
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleDeviceIdChange = (deviceId: string) => setDeviceId(deviceId);
-  const handleVolumeChange = (volume: number) => setVolume(volume);
+  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
+
   const handleCheck = () => {
     setIsPlaying((s) => !s);
     audio.play();
@@ -28,11 +20,8 @@ export default function OutputAudioForm() {
   };
 
   useEffect(() => {
-    setAudio((audio) => {
-      audio.volume = volume / 100;
-      return audio;
-    });
-  }, [volume]);
+    return () => audio.pause();
+  }, [audio]);
 
   useEffect(() => {
     setAudio((audio) => {
@@ -42,13 +31,13 @@ export default function OutputAudioForm() {
   }, [deviceId]);
 
   return (
-    <Stack>
+    <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Output</Typography>
-      <AudioDeviceForm
+      <DeviceSelect
         devices={audioOutput}
-        onDeviceChange={handleDeviceIdChange}
-        onVolumeChange={handleVolumeChange}
-        disabled={!audio.setSinkId}
+        deviceId={deviceId}
+        onChange={handleChange}
+        disabled={!audio.setSinkId || isPlaying}
       />
       <Button onClick={handleCheck} variant='contained' disabled={isPlaying}>
         Check

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDevices } from '../../contexts/DevicesContext';
-import { FormControl, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
+import { SelectChangeEvent, Stack } from '@mui/material';
 import VideoView from '../VideoView';
+import DeviceSelect from './DeviceSelect';
 
 const videoConstraints = {
   width: { min: 1024, ideal: 1280, max: 1920 },
@@ -10,7 +11,7 @@ const videoConstraints = {
 
 export default function VideoInputForm() {
   const { videoInput } = useDevices();
-  const [deviceId, setDeviceId] = useState('');
+  const [deviceId, setDeviceId] = useState('default');
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
@@ -56,15 +57,7 @@ export default function VideoInputForm() {
   return (
     <Stack spacing={2}>
       <VideoView stream={stream} />
-      <FormControl style={{ width: '100%' }}>
-        <Select value={deviceId} onChange={handleChange} displayEmpty>
-          {videoInput.map((device, index) => (
-            <MenuItem value={device.deviceId} key={index}>
-              {device.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <DeviceSelect devices={videoInput} deviceId={deviceId} onChange={handleChange} />
     </Stack>
   );
 }

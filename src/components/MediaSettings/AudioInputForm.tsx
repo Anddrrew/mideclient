@@ -1,17 +1,17 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { useDevices } from '../../contexts/DevicesContext';
-import AudioDeviceForm from './AudioDeviceForm';
 import { useEffect, useRef, useState } from 'react';
+import DeviceSelect from './DeviceSelect';
 
 const CHECK_TIME_IN_MILISECONDS = 3000;
 
-export default function InputDeviceForm() {
+export default function AudioInputForm() {
   const { audioInput } = useDevices();
   const [deviceId, setDeviceId] = useState('default');
   const [isActive, setIsActive] = useState(false);
   const audioRef = useRef(new Audio());
 
-  const handleDeviceChange = (deviceId: string) => setDeviceId(deviceId);
+  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
 
   const startAudio = (stream: MediaStream) => {
     audioRef.current.srcObject = stream;
@@ -39,9 +39,9 @@ export default function InputDeviceForm() {
   useEffect(() => stopAudio, []);
 
   return (
-    <Stack>
+    <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Input</Typography>
-      <AudioDeviceForm devices={audioInput} onDeviceChange={handleDeviceChange} />
+      <DeviceSelect devices={audioInput} deviceId={deviceId} onChange={handleChange} disabled={isActive} />
       <Button onClick={checkAudio} variant='contained' disabled={isActive}>
         {isActive ? 'Say something' : 'Check'}
       </Button>
