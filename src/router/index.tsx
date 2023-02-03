@@ -1,40 +1,48 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home, Login, Room } from '../pages';
-import { ReactNode } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { appPaths, guestPaths } from './paths';
-import Layout from '../layout';
+import { Home, Login, Room } from '../pages';
+import { useAuth } from '../contexts/AuthContext';
+import GuestLayout from '../layout/GuestLayout';
+import AppLayout from '../layout/AppLayout';
 
-type PageComponentMap = {
-  [path: string]: ReactNode;
-};
+const guestRouter = createBrowserRouter([
+  {
+    element: <GuestLayout />,
+    children: [
+      {
+        path: guestPaths.LOGIN,
+        element: <Login />,
+      },
+      {
+        path: '*',
+        element: <Navigate to={guestPaths.LOGIN} />,
+      },
+    ],
+  },
+]);
 
-const guestPages: PageComponentMap = {
-  [guestPaths.LOGIN]: <Login />,
-  '*': <Navigate to={guestPaths.LOGIN} />,
-};
-
-const appPages: PageComponentMap = {
-  [appPaths.INDEX]: <Home />,
-  [appPaths.ROOM]: <Room />,
-  '*': <Navigate to={appPaths.INDEX} />,
-};
-
-const createRouter = (pages: PageComponentMap) =>
-  createBrowserRouter([
-    {
-      element: <Layout />,
-      children: Object.keys(pages).map((key) => ({
-        path: key,
-        element: pages[key],
-      })),
-    },
-  ]);
-
-const guestRouter = createRouter(guestPages);
-const appRouter = createRouter(appPages);
+const appRouter = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: appPaths.INDEX,
+        element: <Home />,
+      },
+      {
+        path: appPaths.ROOM,
+        element: <Room />,
+      },
+      {
+        path: '*',
+        element: <Navigate to={appPaths.INDEX} />,
+      },
+    ],
+  },
+]);
 
 export default function Router() {
   const { isLoggedIn } = useAuth();
+
   return <RouterProvider router={isLoggedIn ? appRouter : guestRouter} />;
 }

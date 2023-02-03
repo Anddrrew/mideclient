@@ -8,13 +8,13 @@ const useAuthManager = () => {
   const logIn = () => {
     AuthManager.login('TOKEN');
     setIsLoggedIn(true);
-    window.location.hash = appPaths.INDEX;
+    history.replaceState('', '', appPaths.INDEX);
   };
 
   const logOut = () => {
     AuthManager.logout();
     setIsLoggedIn(false);
-    window.location.hash = guestPaths.LOGIN;
+    history.replaceState('', '', guestPaths.LOGIN);
   };
 
   return { isLoggedIn, logIn, logOut };
