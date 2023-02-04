@@ -1,12 +1,13 @@
 import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
-import { useDevices } from '../../contexts/DevicesContext';
 import { useEffect, useRef, useState } from 'react';
 import DeviceSelect from './DeviceSelect';
+import { useSystemDevices } from '../../contexts/SystemDevicesContext';
+import { observer } from 'mobx-react-lite';
 
 const CHECK_TIME_IN_MILISECONDS = 3000;
 
-export default function AudioInputForm() {
-  const { audioInput } = useDevices();
+function AudioInputForm() {
+  const { audioInput } = useSystemDevices();
   const [deviceId, setDeviceId] = useState('default');
   const [isActive, setIsActive] = useState(false);
   const audioRef = useRef(new Audio());
@@ -48,3 +49,5 @@ export default function AudioInputForm() {
     </Stack>
   );
 }
+
+export default observer(AudioInputForm);

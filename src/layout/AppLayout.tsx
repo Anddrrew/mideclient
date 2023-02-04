@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { DevicesContextProvider } from '../contexts/DevicesContext';
-import { MediaContextProvider } from '../contexts/MediaContext';
 import { Box, CircularProgress } from '@mui/material';
-import DevicesManager from '../services/DevicesManager';
 import { Outlet } from 'react-router-dom';
 import GeneralLayout from './GeneralLayout';
+import { SystemDevicesProvider } from '../contexts/SystemDevicesContext';
+import SystemDevicesManager from '../services/SystemDevicesManager';
 
 const Fallback = () => (
   <Box display='flex' alignItems='center' justifyContent='center' style={{ minHeight: 'calc(100vh - 64px)' }}>
@@ -16,9 +15,9 @@ export default function AppLayout() {
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    DevicesManager.updateDevices().then(() => {
-      setAppIsReady(true);
-    });
+    SystemDevicesManager.subscribeDeviceChange();
+    setAppIsReady(true);
+    return () => SystemDevicesManager.unsubscribeDeviceChange();
   }, []);
 
   return (
@@ -26,11 +25,9 @@ export default function AppLayout() {
       {!appIsReady ? (
         <Fallback />
       ) : (
-        <DevicesContextProvider>
-          <MediaContextProvider>
-            <Outlet />
-          </MediaContextProvider>
-        </DevicesContextProvider>
+        <SystemDevicesProvider>
+          <Outlet />
+        </SystemDevicesProvider>
       )}
     </GeneralLayout>
   );

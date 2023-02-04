@@ -1,12 +1,13 @@
 import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
-import { useDevices } from '../../contexts/DevicesContext';
 import bleepAudio from './../../assets/audios/bleep.mp3';
 import { useEffect, useState } from 'react';
 import AudioElement from '../../types/AudioElement';
 import DeviceSelect from './DeviceSelect';
+import { useSystemDevices } from '../../contexts/SystemDevicesContext';
+import { observer } from 'mobx-react-lite';
 
-export default function AudioOutputForm() {
-  const { audioOutput } = useDevices();
+function AudioOutputForm() {
+  const { audioOutput } = useSystemDevices();
   const [deviceId, setDeviceId] = useState('default');
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -45,3 +46,5 @@ export default function AudioOutputForm() {
     </Stack>
   );
 }
+
+export default observer(AudioOutputForm);

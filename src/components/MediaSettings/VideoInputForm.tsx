@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useDevices } from '../../contexts/DevicesContext';
 import { SelectChangeEvent, Stack } from '@mui/material';
 import VideoView from '../VideoView';
 import DeviceSelect from './DeviceSelect';
+import { useSystemDevices } from '../../contexts/SystemDevicesContext';
+import { observer } from 'mobx-react-lite';
 
 const videoConstraints = {
   width: { min: 1024, ideal: 1280, max: 1920 },
   height: { min: 576, ideal: 720, max: 1080 },
 };
 
-export default function VideoInputForm() {
-  const { videoInput } = useDevices();
+function VideoInputForm() {
+  const { videoInput } = useSystemDevices();
   const [deviceId, setDeviceId] = useState('default');
   const [stream, setStream] = useState<MediaStream | null>(null);
 
@@ -61,3 +62,5 @@ export default function VideoInputForm() {
     </Stack>
   );
 }
+
+export default observer(VideoInputForm);
