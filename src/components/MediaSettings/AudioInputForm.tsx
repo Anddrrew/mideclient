@@ -8,11 +8,10 @@ const CHECK_TIME_IN_MILISECONDS = 3000;
 
 function AudioInputForm() {
   const { audioInput } = useMedia();
-  const [deviceId, setDeviceId] = useState('default');
   const [isActive, setIsActive] = useState(false);
   const audioRef = useRef(new Audio());
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
+  const handleChange = (e: SelectChangeEvent) => audioInput.setDeviceId(e.target.value);
 
   const startAudio = (stream: MediaStream) => {
     audioRef.current.srcObject = stream;
@@ -31,7 +30,7 @@ function AudioInputForm() {
     navigator.mediaDevices
       .getUserMedia({
         audio: {
-          deviceId,
+          deviceId: audioInput.deviceId,
         },
       })
       .then(startAudio)
@@ -42,7 +41,12 @@ function AudioInputForm() {
   return (
     <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Input</Typography>
-      <DeviceSelect devices={audioInput.devices} deviceId={deviceId} onChange={handleChange} disabled={isActive} />
+      <DeviceSelect
+        devices={audioInput.devices}
+        deviceId={audioInput.deviceId}
+        onChange={handleChange}
+        disabled={isActive}
+      />
       <Button onClick={checkAudio} variant='contained' disabled={isActive}>
         {isActive ? 'Say something' : 'Check'}
       </Button>

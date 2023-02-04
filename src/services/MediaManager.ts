@@ -3,10 +3,16 @@ import { makeObservable, autorun, observable } from 'mobx';
 
 class MediaManager<T> {
   devices = [] as T;
+  deviceId = 'default';
+
+  setDeviceId(deviceId: string) {
+    this.deviceId = deviceId;
+  }
 
   constructor() {
     makeObservable(this, {
       devices: observable,
+      deviceId: observable,
     });
   }
 }

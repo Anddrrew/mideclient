@@ -12,17 +12,16 @@ const videoConstraints = {
 
 function VideoInputForm() {
   const { videoInput } = useMedia();
-  const [deviceId, setDeviceId] = useState('default');
   const [stream, setStream] = useState<MediaStream | null>(null);
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
+  const handleChange = (e: SelectChangeEvent) => videoInput.setDeviceId(e.target.value);
 
   const startVideoStream = () => {
     navigator.mediaDevices
       .getUserMedia({
         video: {
           ...videoConstraints,
-          deviceId,
+          deviceId: videoInput.deviceId,
         },
       })
       .then(setStream)
@@ -34,8 +33,8 @@ function VideoInputForm() {
   };
 
   useEffect(() => {
-    if (deviceId) startVideoStream();
-  }, [deviceId]);
+    if (videoInput.deviceId) startVideoStream();
+  }, [videoInput.deviceId]);
 
   useEffect(() => {
     return () => stopVideoStream();
@@ -44,7 +43,7 @@ function VideoInputForm() {
   return (
     <Stack spacing={2}>
       <VideoView stream={stream} />
-      <DeviceSelect devices={videoInput.devices} deviceId={deviceId} onChange={handleChange} />
+      <DeviceSelect devices={videoInput.devices} deviceId={videoInput.deviceId} onChange={handleChange} />
     </Stack>
   );
 }

@@ -8,11 +8,10 @@ import { useMedia } from '../../contexts/MediaContext';
 
 function AudioOutputForm() {
   const { audioOutput } = useMedia();
-  const [deviceId, setDeviceId] = useState('default');
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
+  const handleChange = (e: SelectChangeEvent) => audioOutput.setDeviceId(e.target.value);
 
   const handleCheck = () => {
     setIsPlaying((s) => !s);
@@ -26,17 +25,17 @@ function AudioOutputForm() {
 
   useEffect(() => {
     setAudio((audio) => {
-      audio.setSinkId?.(deviceId);
+      audio.setSinkId?.(audioOutput.deviceId);
       return audio;
     });
-  }, [deviceId]);
+  }, [audioOutput.deviceId]);
 
   return (
     <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Output</Typography>
       <DeviceSelect
         devices={audioOutput.devices}
-        deviceId={deviceId}
+        deviceId={audioOutput.deviceId}
         onChange={handleChange}
         disabled={!audio.setSinkId || isPlaying}
       />
