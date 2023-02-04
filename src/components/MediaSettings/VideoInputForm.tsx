@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { SelectChangeEvent, Stack } from '@mui/material';
 import VideoView from '../VideoView';
 import DeviceSelect from './DeviceSelect';
-import { useSystemDevices } from '../../contexts/SystemDevicesContext';
 import { observer } from 'mobx-react-lite';
+import { useMedia } from '../../contexts/MediaContext';
 
 const videoConstraints = {
   width: { min: 1024, ideal: 1280, max: 1920 },
@@ -11,7 +11,7 @@ const videoConstraints = {
 };
 
 function VideoInputForm() {
-  const { videoInput } = useSystemDevices();
+  const { videoInput } = useMedia();
   const [deviceId, setDeviceId] = useState('default');
   const [stream, setStream] = useState<MediaStream | null>(null);
 
@@ -34,20 +34,6 @@ function VideoInputForm() {
   };
 
   useEffect(() => {
-    setDeviceId((id) => {
-      if (id && videoInput.map((d) => d.deviceId).includes(id)) {
-        return id;
-      }
-
-      if (videoInput.length) {
-        return videoInput[0].deviceId;
-      }
-
-      return '';
-    });
-  }, [videoInput]);
-
-  useEffect(() => {
     if (deviceId) startVideoStream();
   }, [deviceId]);
 
@@ -58,7 +44,7 @@ function VideoInputForm() {
   return (
     <Stack spacing={2}>
       <VideoView stream={stream} />
-      <DeviceSelect devices={videoInput} deviceId={deviceId} onChange={handleChange} />
+      <DeviceSelect devices={videoInput.devices} deviceId={deviceId} onChange={handleChange} />
     </Stack>
   );
 }

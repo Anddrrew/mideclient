@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import GeneralLayout from './GeneralLayout';
-import { SystemDevicesProvider } from '../contexts/SystemDevicesContext';
+import { MediaProvider } from '../contexts/MediaContext';
 import SystemDevicesManager from '../services/SystemDevicesManager';
 
 const Fallback = () => (
@@ -25,9 +25,9 @@ export default function AppLayout() {
       {!appIsReady ? (
         <Fallback />
       ) : (
-        <SystemDevicesProvider>
+        <MediaProvider>
           <Outlet />
-        </SystemDevicesProvider>
+        </MediaProvider>
       )}
     </GeneralLayout>
   );

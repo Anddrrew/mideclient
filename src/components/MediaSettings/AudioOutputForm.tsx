@@ -3,11 +3,11 @@ import bleepAudio from './../../assets/audios/bleep.mp3';
 import { useEffect, useState } from 'react';
 import AudioElement from '../../types/AudioElement';
 import DeviceSelect from './DeviceSelect';
-import { useSystemDevices } from '../../contexts/SystemDevicesContext';
 import { observer } from 'mobx-react-lite';
+import { useMedia } from '../../contexts/MediaContext';
 
 function AudioOutputForm() {
-  const { audioOutput } = useSystemDevices();
+  const { audioOutput } = useMedia();
   const [deviceId, setDeviceId] = useState('default');
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -35,7 +35,7 @@ function AudioOutputForm() {
     <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Output</Typography>
       <DeviceSelect
-        devices={audioOutput}
+        devices={audioOutput.devices}
         deviceId={deviceId}
         onChange={handleChange}
         disabled={!audio.setSinkId || isPlaying}
