@@ -4,6 +4,7 @@ import { Home, Login, Room } from '../pages';
 import { useAuth } from '../contexts/AuthContext';
 import GuestLayout from '../layout/GuestLayout';
 import AppLayout from '../layout/AppLayout';
+import { observer } from 'mobx-react-lite';
 
 const guestRouter = createBrowserRouter([
   {
@@ -41,8 +42,9 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
-export default function Router() {
+function Router() {
   const { isLoggedIn } = useAuth();
-
   return <RouterProvider router={isLoggedIn ? appRouter : guestRouter} />;
 }
+
+export default observer(Router);

@@ -2,15 +2,20 @@ import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { appPaths, guestPaths } from '../router/paths';
+import { observer } from 'mobx-react-lite';
 
 type Props = {
   children: ReactNode;
 };
 
-export default function GeneralLayout({ children }: Props) {
-  const { isLoggedIn, logIn, logOut } = useAuth();
+function GeneralLayout({ children }: Props) {
+  const { isLoggedIn, login, logout } = useAuth();
 
-  const handleClick = () => (isLoggedIn ? logOut() : logIn());
+  const handleClick = () =>
+    isLoggedIn
+      ? logout(() => history.replaceState('', '', guestPaths.LOGIN))
+      : login('fake_token', () => history.replaceState('', '', appPaths.INDEX));
 
   return (
     <>
@@ -30,3 +35,5 @@ export default function GeneralLayout({ children }: Props) {
     </>
   );
 }
+
+export default observer(GeneralLayout);

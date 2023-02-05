@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import { AuthContextProvider } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Router from './router';
 import './App.css';
 
@@ -13,9 +13,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthContextProvider>
+      <AuthProvider>
         <Router />
-      </AuthContextProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

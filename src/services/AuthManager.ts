@@ -1,24 +1,26 @@
+import { makeAutoObservable } from 'mobx';
+import StorageManager from './StorageManager';
+
 class AuthManager {
-  private key = 'token';
+  private storage = new StorageManager(localStorage, 'token');
+  isLoggedIn: boolean;
 
-  private get = () => localStorage.getItem(this.key) || '';
-
-  private set = (token: string) => localStorage.setItem(this.key, token);
-
-  private remove = () => localStorage.removeItem(this.key);
-
-  isLoggedIn() {
-    const token = this.get();
-    return !!token;
+  constructor() {
+    makeAutoObservable(this);
+    this.isLoggedIn = !!this.storage.get();
   }
 
-  login(token: string) {
-    this.set(token);
-  }
+  login = (token: string, cb?: () => void) => {
+    this.isLoggedIn = true;
+    this.storage.set(token);
+    cb?.();
+  };
 
-  logout() {
-    this.remove();
-  }
+  logout = (cb?: () => void) => {
+    this.isLoggedIn = false;
+    this.storage.remove();
+    cb?.();
+  };
 }
 
 export default new AuthManager();
