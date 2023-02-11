@@ -21,8 +21,6 @@ class SystemDevicesManager {
       setAudioInput: action,
       setAudioOutput: action,
     });
-
-    this.getSystemDevices().then((devices) => this.setDevices(devices));
   }
 
   private setDevices({ videoInput, audioInput, audioOutput }: SystemDevices) {
@@ -67,6 +65,10 @@ class SystemDevicesManager {
 
   unsubscribeDeviceChange() {
     navigator.mediaDevices.ondevicechange = null;
+  }
+
+  async init() {
+    return await this.getSystemDevices().then((devices) => this.setDevices(devices));
   }
 }
 
