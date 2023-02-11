@@ -55,7 +55,7 @@ class SystemDevicesManager {
     return {
       videoInput: devices.filter((d) => d.kind === 'videoinput'),
       audioInput: devices.filter((d) => d.kind === 'audioinput'),
-      audioOutput: devices.filter((d) => d.kind === 'audioinput'),
+      audioOutput: devices.filter((d) => d.kind === 'audiooutput'),
     };
   }
 
