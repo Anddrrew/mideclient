@@ -6,6 +6,13 @@ import DeviceSelect from './DeviceSelect';
 import { observer } from 'mobx-react-lite';
 import { useAudioOutput } from '../../contexts/MediaContext';
 
+/*
+ * Uncaught (in promise) DOMException: The operation could not be performed and was aborted
+ * This error may appear in the console when developing in React Strict mode.
+ * audio.play() can throw it
+ *
+ */
+
 function AudioOutputForm() {
   const { devices, deviceId, setDeviceId } = useAudioOutput();
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
