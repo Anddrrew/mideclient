@@ -8,9 +8,12 @@ type Props = {
 const MediaContext = createContext(MediaManager);
 
 const useMedia = () => useContext(MediaContext);
+const useVideoInput = () => useMedia().videoInput;
+const useAudioInput = () => useMedia().audioInput;
+const useAudioOutput = () => useMedia().audioOutput;
 
 const MediaProvider = ({ children }: Props) => {
   return <MediaContext.Provider value={MediaManager}>{children}</MediaContext.Provider>;
 };
 
-export { MediaProvider, useMedia };
+export { MediaProvider, useMedia, useVideoInput, useAudioInput, useAudioOutput };

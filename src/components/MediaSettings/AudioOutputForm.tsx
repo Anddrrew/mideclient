@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import AudioElement from '../../types/AudioElement';
 import DeviceSelect from './DeviceSelect';
 import { observer } from 'mobx-react-lite';
-import { useMedia } from '../../contexts/MediaContext';
+import { useAudioOutput } from '../../contexts/MediaContext';
 
 function AudioOutputForm() {
-  const { audioOutput } = useMedia();
+  const { devices, deviceId, setDeviceId } = useAudioOutput();
   const [audio, setAudio] = useState(new Audio(bleepAudio) as AudioElement);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleChange = (e: SelectChangeEvent) => audioOutput.setDeviceId(e.target.value);
+  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
 
   const handleCheck = () => {
     setIsPlaying((s) => !s);
@@ -25,17 +25,17 @@ function AudioOutputForm() {
 
   useEffect(() => {
     setAudio((audio) => {
-      audio.setSinkId?.(audioOutput.deviceId);
+      audio.setSinkId?.(deviceId);
       return audio;
     });
-  }, [audioOutput.deviceId]);
+  }, [deviceId]);
 
   return (
     <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Output</Typography>
       <DeviceSelect
-        devices={audioOutput.devices}
-        deviceId={audioOutput.deviceId}
+        devices={devices}
+        deviceId={deviceId}
         onChange={handleChange}
         disabled={!audio.setSinkId || isPlaying}
       />
