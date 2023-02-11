@@ -1,51 +1,70 @@
+import StorageManager from './StorageManager';
 import SystemDevicesManager from './SystemDevicesManager';
-import { makeObservable, autorun, observable } from 'mobx';
+import { makeObservable, autorun, observable, action } from 'mobx';
 
-class MediaManager<T> {
-  devices = [] as T;
-  deviceId = 'default';
+class DeviceManager<T extends MediaDeviceInfo> {
+  devices = [] as T[];
+  deviceId: string;
+  storage: StorageManager;
 
-  setDeviceId(deviceId: string) {
-    this.deviceId = deviceId;
-  }
+  constructor(storageKey: string, _autorun: (that: DeviceManager<T>) => void) {
+    _autorun(this);
+    this.storage = new StorageManager(localStorage, storageKey);
+    this.deviceId = this.getStorageDeviceId();
 
-  constructor() {
-    makeObservable(this, {
+    makeObservable<DeviceManager<T>, 'setId'>(this, {
       devices: observable,
       deviceId: observable,
+      setId: action,
+      setDevices: action,
     });
-  }
-}
 
-class VideoInputManager extends MediaManager<InputDeviceInfo[]> {
-  constructor() {
-    super();
+    // checks if the selected device is available when the device list is updated
     autorun(() => {
-      this.devices = SystemDevicesManager.videoInput;
+      if (!this.isDeviceAvailable(this.deviceId)) {
+        this.setId(this.devices[0]?.deviceId || '');
+      }
     });
   }
-}
 
-class AudioInputManager extends MediaManager<InputDeviceInfo[]> {
-  constructor() {
-    super();
-    autorun(() => {
-      this.devices = SystemDevicesManager.audioInput;
-    });
+  private getStorageDeviceId() {
+    const id = this.storage.get() || '';
+    if (this.isDeviceAvailable(id)) {
+      return id;
+    }
+
+    this.storage.remove();
+    return '';
   }
-}
 
-class AudioOutputManager extends MediaManager<MediaDeviceInfo[]> {
-  constructor() {
-    super();
-    autorun(() => {
-      this.devices = SystemDevicesManager.audioOutput;
-    });
+  protected isDeviceAvailable = (deviceId: string) => {
+    return !!this.devices.find((d) => d.deviceId === deviceId);
+  };
+
+  private setId(id: string) {
+    this.deviceId = id;
   }
+
+  setDevices(devices: T[]) {
+    this.devices = devices;
+  }
+
+  setDeviceId = (value: string) => {
+    this.setId(value);
+    this.storage.set(value);
+  };
 }
 
-export default {
-  videoInput: new VideoInputManager(),
-  audioInput: new AudioInputManager(),
-  audioOutput: new AudioOutputManager(),
+const MediaManager = {
+  videoInput: new DeviceManager<InputDeviceInfo>('videoInput', (that) =>
+    autorun(() => that.setDevices(SystemDevicesManager.videoInput))
+  ),
+  audioInput: new DeviceManager<InputDeviceInfo>('audioInput', (that) =>
+    autorun(() => that.setDevices(SystemDevicesManager.audioInput))
+  ),
+  audioOutput: new DeviceManager('audioOutput', (that) =>
+    autorun(() => that.setDevices(SystemDevicesManager.audioOutput))
+  ),
 };
+
+export default MediaManager;
