@@ -1,10 +1,11 @@
 import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
-import bleepAudio from './../../assets/audios/bleep.mp3';
-import { useEffect, useState } from 'react';
-import AudioElement from '../../types/AudioElement';
-import DeviceSelect from './DeviceSelect';
 import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
+
 import { useAudioOutput } from '../../contexts/MediaContext';
+import AudioElement from '../../types/AudioElement';
+import bleepAudio from './../../assets/audios/bleep.mp3';
+import DeviceSelect from './DeviceSelect';
 
 /*
  * Uncaught (in promise) DOMException: The operation could not be performed and was aborted

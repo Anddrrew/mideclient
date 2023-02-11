@@ -1,8 +1,9 @@
 import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
-import DeviceSelect from './DeviceSelect';
 import { observer } from 'mobx-react-lite';
+import { useEffect, useRef, useState } from 'react';
+
 import { useAudioInput } from '../../contexts/MediaContext';
+import DeviceSelect from './DeviceSelect';
 
 const CHECK_TIME_IN_MILISECONDS = 3000;
 

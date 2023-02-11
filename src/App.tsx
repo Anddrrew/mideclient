@@ -1,9 +1,11 @@
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import { AuthProvider } from './contexts/AuthContext';
 import './App.css';
+
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import React, { Suspense, useEffect, useState } from 'react';
-import SystemDevicesManager from './services/SystemDevicesManager';
+
 import Fallback from './components/Fallback';
+import { AuthProvider } from './contexts/AuthContext';
+import SystemDevicesManager from './services/SystemDevicesManager';
 
 const Router = React.lazy(() => import('./router'));
 

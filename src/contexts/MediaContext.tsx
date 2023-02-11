@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
+
 import MediaManager from '../services/MediaManager';
 
 type Props = {
@@ -16,4 +17,4 @@ const MediaProvider = ({ children }: Props) => {
   return <MediaContext.Provider value={MediaManager}>{children}</MediaContext.Provider>;
 };
 
-export { MediaProvider, useMedia, useVideoInput, useAudioInput, useAudioOutput };
+export { MediaProvider, useAudioInput, useAudioOutput, useMedia, useVideoInput };

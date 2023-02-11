@@ -1,6 +1,7 @@
+import { action, autorun, makeObservable, observable } from 'mobx';
+
 import StorageManager from './StorageManager';
 import SystemDevicesManager from './SystemDevicesManager';
-import { makeObservable, autorun, observable, action } from 'mobx';
 
 class DeviceManager<T extends MediaDeviceInfo> {
   devices = [] as T[];

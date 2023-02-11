@@ -21,11 +21,14 @@
     "react",
     "react-hooks",
     "@typescript-eslint",
+    "simple-import-sort",
     "prettier"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-empty-function": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
     "prettier/prettier": "warn",
     "no-console": "warn"
   }

@@ -1,7 +1,8 @@
 import { Grid, Stack } from '@mui/material';
-import VideoInputForm from './VideoInputForm';
+
 import AudioInputForm from './AudioInputForm';
 import AudioOutputForm from './AudioOutputForm';
+import VideoInputForm from './VideoInputForm';
 
 export default function MediaSettings() {
   return (

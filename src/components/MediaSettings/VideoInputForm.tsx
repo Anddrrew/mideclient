@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
 import { SelectChangeEvent, Stack } from '@mui/material';
+import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
+
+import { useVideoInput } from '../../contexts/MediaContext';
 import VideoView from '../VideoView';
 import DeviceSelect from './DeviceSelect';
-import { observer } from 'mobx-react-lite';
-import { useVideoInput } from '../../contexts/MediaContext';
 
 const videoConstraints = {
   width: { min: 1024, ideal: 1280, max: 1920 },

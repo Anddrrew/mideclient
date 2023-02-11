@@ -1,4 +1,4 @@
-import { CircularProgress, Box, CircularProgressProps } from '@mui/material';
+import { Box, CircularProgress, CircularProgressProps } from '@mui/material';
 
 export default function Fallback({ ...props }: CircularProgressProps) {
   return (

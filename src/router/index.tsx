@@ -1,10 +1,10 @@
-import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { appPaths, guestPaths } from './paths';
-import { Home, Login, Room } from '../pages';
-import { useAuth } from '../contexts/AuthContext';
-import GuestLayout from '../layout/GuestLayout';
-import AppLayout from '../layout/AppLayout';
 import { observer } from 'mobx-react-lite';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+
+import { useAuth } from '../contexts/AuthContext';
+import { AppLayout, GuestLayout } from '../layout';
+import { Home, Login, Room } from '../pages';
+import { appPaths, guestPaths } from './paths';
 
 const guestRouter = createBrowserRouter([
   {

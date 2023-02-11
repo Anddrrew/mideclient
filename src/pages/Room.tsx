@@ -1,5 +1,6 @@
-import { Link as RouterLink, useParams } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+
 import { appPaths } from '../router/paths';
 
 export default function Room() {

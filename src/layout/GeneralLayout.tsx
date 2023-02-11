@@ -1,9 +1,10 @@
 import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 import { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
 import { useAuth } from '../contexts/AuthContext';
 import { appPaths, guestPaths } from '../router/paths';
-import { observer } from 'mobx-react-lite';
 
 type Props = {
   children: ReactNode;

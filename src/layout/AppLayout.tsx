@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import GeneralLayout from './GeneralLayout';
+
 import { MediaProvider } from '../contexts/MediaContext';
 import SystemDevicesManager from '../services/SystemDevicesManager';
+import GeneralLayout from './GeneralLayout';
 
 export default function AppLayout() {
   useEffect(() => {
