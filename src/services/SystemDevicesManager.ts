@@ -1,5 +1,11 @@
-import { makeAutoObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { arraysEqual } from '../utils/equals';
+
+type SystemDevices = {
+  videoInput: InputDeviceInfo[];
+  audioInput: InputDeviceInfo[];
+  audioOutput: MediaDeviceInfo[];
+};
 
 class SystemDevicesManager {
   videoInput: InputDeviceInfo[] = [];
@@ -7,13 +13,52 @@ class SystemDevicesManager {
   audioOutput: MediaDeviceInfo[] = [];
 
   constructor() {
-    makeAutoObservable(this);
-
-    this.getSystemDevices().then(({ videoInput, audioInput, audioOutput }) => {
-      this.videoInput = videoInput;
-      this.audioInput = audioInput;
-      this.audioOutput = audioOutput;
+    makeObservable<SystemDevicesManager, 'setVideoInput' | 'setAudioInput' | 'setAudioOutput'>(this, {
+      videoInput: observable,
+      audioInput: observable,
+      audioOutput: observable,
+      setVideoInput: action,
+      setAudioInput: action,
+      setAudioOutput: action,
     });
+
+    this.getSystemDevices().then((devices) => this.setDevices(devices));
+  }
+
+  private setDevices({ videoInput, audioInput, audioOutput }: SystemDevices) {
+    this.setVideoInput(videoInput);
+    this.setAudioInput(audioInput);
+    this.setAudioOutput(audioOutput);
+  }
+
+  private setVideoInput(devices: typeof this.videoInput) {
+    this.videoInput = devices;
+  }
+
+  private setAudioInput(devices: typeof this.audioInput) {
+    this.audioInput = devices;
+  }
+
+  private setAudioOutput(devices: typeof this.audioOutput) {
+    this.audioOutput = devices;
+  }
+
+  private async updateDevices() {
+    const { videoInput, audioInput, audioOutput } = await this.getSystemDevices();
+
+    if (!arraysEqual(this.videoInput, videoInput)) this.setVideoInput(videoInput);
+    if (!arraysEqual(this.audioInput, audioInput)) this.setAudioInput(audioInput);
+    if (!arraysEqual(this.audioOutput, audioOutput)) this.setAudioOutput(audioOutput);
+  }
+
+  private async getSystemDevices() {
+    const devices = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+
+    return {
+      videoInput: devices.filter((d) => d.kind === 'videoinput'),
+      audioInput: devices.filter((d) => d.kind === 'audioinput'),
+      audioOutput: devices.filter((d) => d.kind === 'audioinput'),
+    };
   }
 
   subscribeDeviceChange() {
@@ -22,38 +67,6 @@ class SystemDevicesManager {
 
   unsubscribeDeviceChange() {
     navigator.mediaDevices.ondevicechange = null;
-  }
-
-  private async updateDevices() {
-    const { videoInput, audioInput, audioOutput } = await this.getSystemDevices();
-
-    if (!arraysEqual(this.videoInput, videoInput)) {
-      this.videoInput = videoInput;
-    }
-
-    if (!arraysEqual(this.audioInput, audioInput)) {
-      this.audioInput = audioInput;
-    }
-
-    if (!arraysEqual(this.audioOutput, audioOutput)) {
-      this.audioOutput = audioOutput;
-    }
-  }
-
-  private async getSystemDevices() {
-    const devices = await navigator.mediaDevices.enumerateDevices().catch(() => []);
-
-    const videoInput: InputDeviceInfo[] = [];
-    const audioInput: InputDeviceInfo[] = [];
-    const audioOutput: MediaDeviceInfo[] = [];
-
-    devices.forEach((device) => {
-      if (device.kind === 'videoinput') videoInput.push(device);
-      if (device.kind === 'audioinput') audioInput.push(device);
-      if (device.kind === 'audiooutput') audioOutput.push(device);
-    });
-
-    return { videoInput, audioInput, audioOutput };
   }
 }
 
