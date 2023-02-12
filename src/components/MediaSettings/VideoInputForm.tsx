@@ -1,4 +1,4 @@
-import { SelectChangeEvent, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 
@@ -15,38 +15,36 @@ function VideoInputForm() {
   const { devices, deviceId, setDeviceId } = useVideoInput();
   const [stream, setStream] = useState<MediaStream | null>(null);
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
-
-  const startVideoStream = () => {
-    navigator.mediaDevices
-      .getUserMedia({
+  const startStream = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           ...videoConstraints,
           deviceId: {
             exact: deviceId,
           },
         },
-      })
-      .then(setStream)
-      .catch(console.error);
+      });
+      setStream(stream);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const stopVideoStream = () => {
+  const stopStream = () => {
     stream?.getTracks().forEach((t) => t.stop());
   };
 
   useEffect(() => {
-    if (deviceId) startVideoStream();
+    if (deviceId) startStream();
   }, [deviceId]);
 
-  useEffect(() => {
-    return () => stopVideoStream();
-  }, [stream]);
+  useEffect(() => stopStream, [stream]);
 
   return (
     <Stack spacing={2}>
       <VideoView stream={stream} />
-      <DeviceSelect devices={devices} deviceId={deviceId} onChange={handleChange} />
+      <DeviceSelect devices={devices} deviceId={deviceId} onChange={setDeviceId} />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
@@ -13,8 +13,6 @@ function AudioInputForm() {
   const { deviceId: outputId } = useAudioOutput();
   const { audio, isPlaying, setSinkId } = useAudio();
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
-
   const startAudio = (stream: MediaStream) => {
     audio.srcObject = stream;
     audio.play();
@@ -27,15 +25,20 @@ function AudioInputForm() {
   };
 
   const checkAudio = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        deviceId: {
-          exact: deviceId,
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: {
+            exact: deviceId,
+          },
         },
-      },
-    });
-    startAudio(stream);
-    setTimeout(stopAudio, CHECK_TIME_IN_MILLISECONDS);
+      });
+
+      startAudio(stream);
+      setTimeout(stopAudio, CHECK_TIME_IN_MILLISECONDS);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -47,7 +50,7 @@ function AudioInputForm() {
   return (
     <Stack spacing={1}>
       <Typography variant='subtitle1'>Audio Input</Typography>
-      <DeviceSelect devices={devices} deviceId={deviceId} onChange={handleChange} disabled={isPlaying} />
+      <DeviceSelect devices={devices} deviceId={deviceId} onChange={setDeviceId} disabled={isPlaying} />
       <Button onClick={checkAudio} variant='contained' disabled={isPlaying}>
         {isPlaying ? 'Say something' : 'Check'}
       </Button>

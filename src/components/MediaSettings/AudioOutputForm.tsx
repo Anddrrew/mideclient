@@ -1,4 +1,4 @@
-import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
@@ -18,16 +18,14 @@ function AudioOutputForm() {
   const { devices, deviceId, setDeviceId } = useAudioOutput();
   const { audio, isPlaying, setSinkId } = useAudio(bleepAudio);
 
-  const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
-  const handleCheck = () => audio.play();
+  const startAudio = () => audio.play();
+  const stopAudio = () => audio.pause();
 
   useEffect(() => {
     setSinkId(deviceId);
   }, [deviceId]);
 
-  useEffect(() => {
-    return () => audio.pause();
-  }, [audio]);
+  useEffect(() => stopAudio, []);
 
   return (
     <Stack spacing={1}>
@@ -35,10 +33,10 @@ function AudioOutputForm() {
       <DeviceSelect
         devices={devices}
         deviceId={deviceId}
-        onChange={handleChange}
+        onChange={setDeviceId}
         disabled={isPlaying || !audio.setSinkId}
       />
-      <Button onClick={handleCheck} variant='contained' disabled={isPlaying}>
+      <Button onClick={startAudio} variant='contained' disabled={isPlaying}>
         Check
       </Button>
     </Stack>
