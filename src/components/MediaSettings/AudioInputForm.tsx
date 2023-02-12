@@ -2,20 +2,23 @@ import { Button, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 
-import { useAudioInput } from '../../contexts/MediaContext';
+import { useAudioInput, useAudioOutput } from '../../contexts/MediaContext';
+import AudioElement from '../../types/AudioElement';
 import DeviceSelect from './DeviceSelect';
 
 const CHECK_TIME_IN_MILISECONDS = 3000;
 
 function AudioInputForm() {
   const { devices, deviceId, setDeviceId } = useAudioInput();
+  const { deviceId: outputId } = useAudioOutput();
   const [isActive, setIsActive] = useState(false);
-  const audioRef = useRef(new Audio());
+  const audioRef = useRef(new Audio() as AudioElement);
 
   const handleChange = (e: SelectChangeEvent) => setDeviceId(e.target.value);
 
   const startAudio = (stream: MediaStream) => {
     audioRef.current.srcObject = stream;
+    audioRef.current.setSinkId?.(outputId);
     audioRef.current.play();
     setIsActive(true);
   };
@@ -31,7 +34,9 @@ function AudioInputForm() {
     navigator.mediaDevices
       .getUserMedia({
         audio: {
-          deviceId,
+          deviceId: {
+            exact: deviceId,
+          },
         },
       })
       .then(startAudio)

@@ -13,7 +13,8 @@ type Props = Modify<
 
 export default function DeviceSelect({ devices, deviceId, onChange, disabled }: Props) {
   return (
-    <Select value={deviceId} onChange={onChange} displayEmpty disabled={disabled}>
+    <Select value={deviceId} onChange={onChange} displayEmpty disabled={disabled || !devices.length}>
+      {!deviceId ? <MenuItem value={''}>Not available</MenuItem> : ''}
       {devices.map((device, index) => (
         <MenuItem value={device.deviceId} key={index}>
           {device.label}

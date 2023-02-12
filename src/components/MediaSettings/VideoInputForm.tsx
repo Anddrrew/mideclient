@@ -22,7 +22,9 @@ function VideoInputForm() {
       .getUserMedia({
         video: {
           ...videoConstraints,
-          deviceId,
+          deviceId: {
+            exact: deviceId,
+          },
         },
       })
       .then(setStream)
