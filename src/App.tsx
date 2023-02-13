@@ -1,20 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import React, { Suspense, useEffect, useState } from 'react';
+
+import Fallback from './components/Fallback';
+import { AuthProvider } from './contexts/AuthContext';
+import SystemDevicesManager from './services/SystemDevicesManager';
+
+const Router = React.lazy(() => import('./router'));
+
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
+export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    SystemDevicesManager.init().then(() => setAppIsReady(true));
+  });
+
+  if (!appIsReady) {
+    return <Fallback />;
+  }
+
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
+        <Suspense fallback={<Fallback />}>
+          <Router />
+        </Suspense>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
-
-export default App;
